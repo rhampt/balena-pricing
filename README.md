@@ -1,8 +1,12 @@
-# Getting Started with Create React App
+# Balena Pricing Calc
+
+## Introduction
+
+This is a conversion of the original JSFiddle Vue-based app for pricing ([here](https://jsfiddle.net/mL6te7nr/5/)).
+
+## Available Scripts Through Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
-## Available Scripts
 
 In the project directory, you can run:
 
