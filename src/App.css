@@ -1,5 +1,4 @@
 .App {
-  text-align: center;
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -8,4 +7,15 @@
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+}
+
+.Table {
+  background-color: #576174;
+  min-width: 300px;
+  margin: 10px;
+  padding: 10px;
+}
+
+.subTextRow {
+  font-size: calc(1px + 2vmin);
 }
