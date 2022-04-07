@@ -79,6 +79,12 @@ function App() {
 
   return (
     <div className="App">
+      <strong className="Warning">
+        Warning: This project is currently in active development and does NOT indicate balena's current volume pricing
+        structure. It is a a WIP project to experiment with more transparent, self-service pricing for balena customers.
+        When this calculator accurately reflects our pricing structure and becomes feature-complete, I'll remove this
+        warning :)
+      </strong>
       <table className="Table">
         <tr>
           <td>

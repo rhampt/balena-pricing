@@ -9,6 +9,12 @@
   color: white;
 }
 
+.Warning {
+  font-size: calc(2px + 2vmin);
+  max-width: 50vw;
+  color: rgb(238, 155, 155);
+}
+
 .Table {
   background-color: #576174;
   min-width: 300px;

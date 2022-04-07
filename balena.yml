@@ -1,0 +1,12 @@
+name: balenaPricing
+type: sw.application
+description: >-
+  A self-serve pricing calculator
+joinable: false
+post-provisioning: >-
+  Check out the [balenaPricing GitHub repo's Readme](https://github.com/rhampt/balena-pricing/blob/main/README.md).
+assets:
+data:
+  defaultDeviceType: raspberrypi4-64
+  supportedDeviceTypes:
+    - raspberrypi4-64
