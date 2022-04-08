@@ -2,7 +2,6 @@ version: '2'
 services:
   frontend:
     restart: always
-    privileged: false
     build: ./frontend
-    expose:
-      - '80'
+    ports:
+      - '80:3000'
