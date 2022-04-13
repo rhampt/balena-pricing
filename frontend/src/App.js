@@ -12,20 +12,18 @@ const params = {
 
 const dollarFormat = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
-const computeAverageDM = (alpha, deviceMonthsMax) => {
-  return (
-    (alpha * Math.pow(deviceMonthsMax, params.beta)) / deviceMonthsMax -
-    params.slipdown * Math.pow(deviceMonthsMax / params.dmInfinity, 1.8)
-  );
+const computeAverageDM = (alpha, dms) => {
+  if (dms === 0) return 0;
+  else return (alpha * Math.pow(dms, params.beta)) / dms - params.slipdown * Math.pow(dms / params.dmInfinity, 1.8);
 };
 
-const computeMarginalDM = (alpha, deviceMonthsMax, deviceMonths, averageDM) => {
-  if (deviceMonths > params.dmInfinity) {
+const computeMarginalDM = (alpha, totalDMsMax, totalDMs, averageDM) => {
+  if (totalDMs > params.dmInfinity) {
     return averageDM;
   } else {
-    const dmsMinusOne = deviceMonthsMax - 1;
+    const dmsMinusOne = totalDMsMax - 1;
     return (
-      averageDM * deviceMonths -
+      averageDM * totalDMsMax -
       ((alpha * Math.pow(dmsMinusOne, params.beta)) / dmsMinusOne -
         params.slipdown * Math.pow(dmsMinusOne / params.dmInfinity, 1.8)) *
         dmsMinusOne
@@ -35,7 +33,8 @@ const computeMarginalDM = (alpha, deviceMonthsMax, deviceMonths, averageDM) => {
 
 function App() {
   const [inputState, setInputState] = useState({
-    devices: 12000,
+    existingDMs: 0,
+    purchasedDMs: 12000,
     months: 12,
     microservices: true,
     fixed: true,
@@ -52,6 +51,9 @@ function App() {
   const changeHandler = (event) => {
     event.persist();
     let value = event.target.type === 'checkbox' ? event.target.checked : event.target.value;
+    if (typeof value != 'boolean') {
+      value = parseInt(value);
+    }
     setInputState((prevState) => ({
       ...prevState,
       [event.target.name]: value,
@@ -65,15 +67,19 @@ function App() {
     const discountFactor = 1.0 - params.baseDiscount - fixedDiscount - expiringDiscount - nonrefundableDiscount;
     const basePrice = inputState.microservices ? 1.5 : 1.0;
     const alpha = (discountFactor * basePrice) / Math.pow(params.baseStepDown, 3);
-    const deviceMonths = inputState.devices * inputState.months;
-    const deviceMonthsMax = deviceMonths > params.dmInfinity ? params.dmInfinity : deviceMonths;
-    const averageDM = computeAverageDM(alpha, deviceMonthsMax);
+    const totalDMs = inputState.existingDMs + inputState.purchasedDMs;
+    const totalDMsMax = totalDMs > params.dmInfinity ? params.dmInfinity : totalDMs;
+
+    const averageExistingDMs = computeAverageDM(alpha, inputState.existingDMs);
+    const averageTotalDMs = computeAverageDM(alpha, totalDMsMax);
+
+    const totalNewPrice = averageTotalDMs * totalDMs - averageExistingDMs * inputState.existingDMs;
 
     setOutputState({
-      marginalDM: dollarFormat.format(computeMarginalDM(alpha, deviceMonthsMax, deviceMonths, averageDM)),
-      averageDM: dollarFormat.format(averageDM),
-      totalPrice: dollarFormat.format(averageDM * deviceMonths),
-      totalDms: deviceMonths,
+      marginalDM: dollarFormat.format(computeMarginalDM(alpha, totalDMsMax, totalDMs, averageTotalDMs)),
+      averageDM: dollarFormat.format(averageTotalDMs),
+      totalPrice: dollarFormat.format(totalNewPrice),
+      totalDms: inputState.purchasedDMs,
     });
   }, [inputState]); // Only re-run the effect if count changes
 
@@ -93,9 +99,15 @@ function App() {
           <td></td>
         </tr>
         <tr>
-          <td className="subTextRow">Devices:</td>
+          <td className="subTextRow">Device-Months currently in the bank:</td>
           <td>
-            <input type="number" name="devices" value={inputState.devices} onChange={changeHandler} />
+            <input type="number" name="existingDMs" value={inputState.existingDMs} onChange={changeHandler} />
+          </td>
+        </tr>
+        <tr>
+          <td className="subTextRow">Device-Months to be purchased:</td>
+          <td>
+            <input type="number" name="purchasedDMs" value={inputState.purchasedDMs} onChange={changeHandler} />
           </td>
         </tr>
         <tr>
@@ -105,25 +117,25 @@ function App() {
           </td>
         </tr>
         <tr>
-          <td className="subTextRow">Microservices: </td>
+          <td className="subTextRow">Does the app use multiple containers (microservices)?</td>
           <td>
             <input type="checkbox" name="microservices" checked={inputState.microservices} onChange={changeHandler} />
           </td>
         </tr>
         <tr>
-          <td className="subTextRow">Fixed License Discount: </td>
+          <td className="subTextRow">Is the license "fixed" to a single device?</td>
           <td>
             <input type="checkbox" name="fixed" checked={inputState.fixed} onChange={changeHandler} />
           </td>
         </tr>
         <tr>
-          <td className="subTextRow">Expirable License Discount: </td>
+          <td className="subTextRow">Does the license expire?</td>
           <td>
             <input type="checkbox" name="expiring" checked={inputState.expiring} onChange={changeHandler} />
           </td>
         </tr>
         <tr>
-          <td className="subTextRow">Nonrefundable License Discount: </td>
+          <td className="subTextRow">Is the license non-refundable?</td>
           <td>
             <input type="checkbox" name="nonRefundable" checked={inputState.nonRefundable} onChange={changeHandler} />
           </td>
@@ -137,19 +149,19 @@ function App() {
           <td></td>
         </tr>
         <tr>
-          <td className="subTextRow">Total Price:</td>
+          <td className="subTextRow">Total price for new device-months:</td>
           <td className="subTextRow">{outputState.totalPrice}</td>
         </tr>
-        <tr>
+        {/* <tr>
           <td className="subTextRow">Total Devices Months:</td>
           <td className="subTextRow">{outputState.totalDms}</td>
-        </tr>
+        </tr> */}
         <tr>
-          <td className="subTextRow">Average DM Price:</td>
+          <td className="subTextRow">Average price for all device-months:</td>
           <td className="subTextRow">{outputState.averageDM}</td>
         </tr>
         <tr>
-          <td className="subTextRow">Marginal DM Price:</td>
+          <td className="subTextRow">Marginal price for more device-months:</td>
           <td className="subTextRow">{outputState.marginalDM}</td>
         </tr>
       </table>
