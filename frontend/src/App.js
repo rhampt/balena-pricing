@@ -110,27 +110,35 @@ function App() {
           <td></td>
         </tr>
         <tr>
-          <td className="subTextRow">Total price for new licenses:</td>
-          <td className="subTextRow">{output.total}</td>
+          <td className="subTextRow">
+            <strong>Total price for new licenses</strong>
+          </td>
+          <td className="subTextRow">
+            <strong>{output.total}</strong>
+          </td>
         </tr>
         <tr>
-          <td className="subTextRow">Savings over $2 dynamic charge:</td>
-          <td className="subTextRow">{output.savings}</td>
+          <td className="subTextRow">
+            <strong>Savings over $2 dynamic charge</strong>
+          </td>
+          <td className="subTextRow">
+            <strong>{output.savings}</strong>
+          </td>
         </tr>
         <tr>
-          <td className="subTextRow">Average price for a {input.duration} month license:</td>
+          <td className="subTextRow">Average price for a {input.duration} month license</td>
           <td className="subTextRow">{output.average}</td>
         </tr>
         <tr>
-          <td className="subTextRow">Marginal price for a device-month:</td>
+          <td className="subTextRow">Marginal price for a device-month</td>
           <td className="subTextRow">{output.marginalDM}</td>
         </tr>
         <tr>
-          <td className="subTextRow">Average price for a device-month:</td>
+          <td className="subTextRow">Average price for a device-month</td>
           <td className="subTextRow">{output.averageDM}</td>
         </tr>
         <tr>
-          <td className="subTextRow">Marginal price for a {input.duration} month license:</td>
+          <td className="subTextRow">Marginal price for a {input.duration} month license</td>
           <td className="subTextRow">{output.marginal}</td>
         </tr>
       </table>
