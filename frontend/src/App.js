@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 const dollarFormat = Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 
 function App() {
-  const [inputState, setInputState] = useState({
+  const [input, setinput] = useState({
     existingLicenses: 0,
     purchasedLicenses: 1000,
     duration: 12,
@@ -12,10 +12,11 @@ function App() {
     multiplier: 1.5,
   });
 
-  const [outputState, setOutputState] = useState({
+  const [output, setoutput] = useState({
     marginal: 0,
     average: 0,
     total: 0,
+    savings: 0,
   });
 
   const changeHandler = (event) => {
@@ -24,36 +25,37 @@ function App() {
     if (typeof value != 'boolean') {
       value = parseInt(value);
     }
-    setInputState((prevState) => ({
+    setinput((prevState) => ({
       ...prevState,
       [event.target.name]: value,
     }));
   };
 
   useEffect(() => {
-    const newDMs = inputState.duration * inputState.purchasedLicenses;
-    const existingDMs = inputState.duration * inputState.existingLicenses;
+    const newDMs = input.duration * input.purchasedLicenses;
+    const existingDMs = input.duration * input.existingLicenses;
     const totalDMs = newDMs + existingDMs;
+    const m = input.duration * input.multiplier;
 
     const previousTotal =
-      inputState.multiplier * existingDMs * Math.pow(inputState.base, Math.log10(Math.max(existingDMs / 1000, 1)));
-    const fullTotal =
-      inputState.multiplier * totalDMs * Math.pow(inputState.base, Math.log10(Math.max(totalDMs / 1000, 1)));
+      input.multiplier * existingDMs * Math.pow(input.base, Math.log10(Math.max(existingDMs / 1000, 1)));
 
-    console.log(previousTotal + '   ' + fullTotal);
+    const fullTotal = input.multiplier * totalDMs * Math.pow(input.base, Math.log10(Math.max(totalDMs / 1000, 1)));
 
-    const newAverage = inputState.multiplier * Math.pow(inputState.base, Math.log10(Math.max(totalDMs / 1000, 1)));
+    const newAverage = m * Math.pow(input.base, Math.log10(Math.max(totalDMs / 1000, 1)));
+
     const newMarginal =
-      inputState.multiplier *
-      (totalDMs * Math.pow(inputState.base, Math.log10(Math.max(totalDMs / 1000, 1))) -
-        (totalDMs - 1) * Math.pow(inputState.base, Math.log10(Math.max((totalDMs - 1) / 1000, 1))));
+      m *
+      (totalDMs * Math.pow(input.base, Math.log10(Math.max(totalDMs / 1000, 1))) -
+        (totalDMs - 1) * Math.pow(input.base, Math.log10(Math.max((totalDMs - 1) / 1000, 1))));
 
-    setOutputState({
+    setoutput({
       marginal: dollarFormat.format(newMarginal),
       average: dollarFormat.format(newAverage),
       total: dollarFormat.format(fullTotal - previousTotal),
+      savings: dollarFormat.format(newDMs * 2 - (fullTotal - previousTotal)),
     });
-  }, [inputState]); // Only re-run the effect if count changes
+  }, [input]); // Only re-run the effect if count changes
 
   return (
     <div className="App">
@@ -74,31 +76,19 @@ function App() {
         <tr>
           <td className="subTextRow">Existing Device Licenses</td>
           <td>
-            <input type="number" name="existingLicenses" value={inputState.existingLicenses} onChange={changeHandler} />
+            <input type="number" name="existingLicenses" value={input.existingLicenses} onChange={changeHandler} />
           </td>
         </tr>
         <tr>
           <td className="subTextRow">Device Licenses to Purchase</td>
           <td>
-            <input
-              type="number"
-              name="purchasedLicenses"
-              value={inputState.purchasedLicenses}
-              onChange={changeHandler}
-            />
+            <input type="number" name="purchasedLicenses" value={input.purchasedLicenses} onChange={changeHandler} />
           </td>
         </tr>
         <tr>
           <td className="subTextRow">License Duration (Months)</td>
           <td>
-            <input
-              type="number"
-              name="duration"
-              min="1"
-              max="120"
-              value={inputState.duration}
-              onChange={changeHandler}
-            />
+            <input type="number" name="duration" min="1" max="120" value={input.duration} onChange={changeHandler} />
           </td>
         </tr>
       </table>
@@ -111,16 +101,20 @@ function App() {
           <td></td>
         </tr>
         <tr>
-          <td className="subTextRow">Total price (for new): </td>
-          <td className="subTextRow">{outputState.total}</td>
+          <td className="subTextRow">Total price for new licenses:</td>
+          <td className="subTextRow">{output.total}</td>
         </tr>
         <tr>
-          <td className="subTextRow">Average price for all device-months:</td>
-          <td className="subTextRow">{outputState.average}</td>
+          <td className="subTextRow">Savings over $2 dynamic charge:</td>
+          <td className="subTextRow">{output.savings}</td>
         </tr>
         <tr>
-          <td className="subTextRow">Marginal price for more device-months:</td>
-          <td className="subTextRow">{outputState.marginal}</td>
+          <td className="subTextRow">Average price for a {input.duration} month license:</td>
+          <td className="subTextRow">{output.average}</td>
+        </tr>
+        <tr>
+          <td className="subTextRow">Marginal price for a {input.duration} month license:</td>
+          <td className="subTextRow">{output.marginal}</td>
         </tr>
       </table>
     </div>
