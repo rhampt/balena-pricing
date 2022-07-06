@@ -15,6 +15,11 @@
   color: rgb(238, 155, 155);
 }
 
+.repo {
+  max-width: 50vw;
+  color: rgb(0, 145, 255);
+}
+
 .Table {
   background-color: #576174;
   min-width: 300px;

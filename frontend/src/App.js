@@ -59,6 +59,12 @@ function App() {
 
   return (
     <div className="App">
+      <strong>
+        <a className="repo" href="https://github.com/rhampt/balena-pricing">
+          https://github.com/rhampt/balena-pricing
+        </a>
+      </strong>
+      <br></br>
       <strong className="Warning">
         Warning: This project is currently in active development and does NOT indicate balena's current volume pricing
         structure. It is a a WIP project to experiment with more transparent, self-service pricing for balena customers.
