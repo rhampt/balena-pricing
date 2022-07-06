@@ -54,6 +54,8 @@ function App() {
       average: dollarFormat.format(newAverage),
       total: dollarFormat.format(fullTotal - previousTotal),
       savings: dollarFormat.format(newDMs * 2 - (fullTotal - previousTotal)),
+      marginalDM: dollarFormat.format(newMarginal / input.duration),
+      averageDM: dollarFormat.format(newAverage / input.duration),
     });
   }, [input]); // Only re-run the effect if count changes
 
@@ -80,12 +82,6 @@ function App() {
           <td></td>
         </tr>
         <tr>
-          <td className="subTextRow">Existing Device Licenses</td>
-          <td>
-            <input type="number" name="existingLicenses" value={input.existingLicenses} onChange={changeHandler} />
-          </td>
-        </tr>
-        <tr>
           <td className="subTextRow">Device Licenses to Purchase</td>
           <td>
             <input type="number" name="purchasedLicenses" value={input.purchasedLicenses} onChange={changeHandler} />
@@ -95,6 +91,13 @@ function App() {
           <td className="subTextRow">License Duration (Months)</td>
           <td>
             <input type="number" name="duration" min="1" max="120" value={input.duration} onChange={changeHandler} />
+          </td>
+        </tr>
+        <br></br>
+        <tr>
+          <td className="subTextRow">Licenses Already Purchased But Unused</td>
+          <td>
+            <input type="number" name="existingLicenses" value={input.existingLicenses} onChange={changeHandler} />
           </td>
         </tr>
       </table>
@@ -117,6 +120,14 @@ function App() {
         <tr>
           <td className="subTextRow">Average price for a {input.duration} month license:</td>
           <td className="subTextRow">{output.average}</td>
+        </tr>
+        <tr>
+          <td className="subTextRow">Marginal price for a device-month:</td>
+          <td className="subTextRow">{output.marginalDM}</td>
+        </tr>
+        <tr>
+          <td className="subTextRow">Average price for a device-month:</td>
+          <td className="subTextRow">{output.averageDM}</td>
         </tr>
         <tr>
           <td className="subTextRow">Marginal price for a {input.duration} month license:</td>
