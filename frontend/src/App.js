@@ -61,19 +61,14 @@ function App() {
 
   return (
     <div className="App">
-      <strong>
-        <a className="repo" href="https://github.com/rhampt/balena-pricing">
-          https://github.com/rhampt/balena-pricing
-        </a>
-      </strong>
-      <br></br>
+      {/* <br></br>
       <strong className="Warning">
         Warning: This project is currently in active development and does NOT indicate balena's current volume pricing
         structure. It is a a WIP project to experiment with more transparent, self-service pricing for balena customers.
         When this calculator accurately reflects our pricing structure and becomes feature-complete, I'll remove this
         warning.
-      </strong>
-      <br></br>
+      </strong> 
+      <br></br>*/}
       <table className="Table">
         <tr>
           <td>
@@ -95,7 +90,7 @@ function App() {
         </tr>
         <br></br>
         <tr>
-          <td className="subTextRow">Licenses Already Purchased But Unused</td>
+          <td className="subTextRow">Already Purchased Unused Licenses</td>
           <td>
             <input type="number" name="existingLicenses" value={input.existingLicenses} onChange={changeHandler} />
           </td>
@@ -129,19 +124,24 @@ function App() {
           <td className="subTextRow">Average price for a {input.duration} month license</td>
           <td className="subTextRow">{output.average}</td>
         </tr>
-        <tr>
-          <td className="subTextRow">Marginal price for a device-month</td>
-          <td className="subTextRow">{output.marginalDM}</td>
-        </tr>
+        {/* <tr>
+          <td className="subTextRow">Marginal price for a {input.duration} month license</td>
+          <td className="subTextRow">{output.marginal}</td>
+        </tr> */}
         <tr>
           <td className="subTextRow">Average price for a device-month</td>
           <td className="subTextRow">{output.averageDM}</td>
         </tr>
-        <tr>
-          <td className="subTextRow">Marginal price for a {input.duration} month license</td>
-          <td className="subTextRow">{output.marginal}</td>
-        </tr>
+        {/* <tr>
+          <td className="subTextRow">Marginal price for a device-month</td>
+          <td className="subTextRow">{output.marginalDM}</td>
+        </tr> */}
       </table>
+      <strong>
+        <a className="repo" href="https://github.com/rhampt/balena-pricing">
+          https://github.com/rhampt/balena-pricing
+        </a>
+      </strong>
     </div>
   );
 }
